@@ -1,5 +1,5 @@
 #!/bin/bash
-# 参考
+## 参考
 # http://needtec.exblog.jp/21547762/
 # https://gist.github.com/sabaneko/7132133
 # http://www.garunimo.com/program/linux/linux40.xhtml
@@ -12,9 +12,9 @@
 mail='ログインメールアドレス'
 pass='ログインパスワード'
 
-# wget --post-data "mail=${mail}&password=${pass}" -q -O - --save-cookies=cookie1.txt --keep-session-cookies https://secure.nicovideo.jp/secure/login?site=niconico > login.html
-# wget --save-cookies=cookie2.txt --keep-session-cookies -q -O - --load-cookies=cookie1.txt http://flapi.nicovideo.jp/api/getflv/sm4538955 > flapi.html
-# cat flapi.html | tr = @ | tr % = | nkf -WwmQ | tr @ = | sed 's/&/\n/g' > decoded.txt
+## 初回は以下の2行を有効化して、decoded.txt を生成する
+# wget --post-data "mail=${mail}&password=${pass}" -q -O - --save-cookies=cookie1.txt --keep-session-cookies https://secure.nicovideo.jp/secure/login?site=niconico > /dev/null
+# wget --save-cookies=cookie2.txt --keep-session-cookies -q -O - --load-cookies=cookie1.txt http://flapi.nicovideo.jp/api/getflv/sm4538955 | tr = @ | tr % = | nkf -WwmQ | tr @ = | sed 's/&/\n/g' > decoded.txt
 
 thread_id=$(grep '^thread_id=' decoded.txt | cut -d'=' -f2)
 echo "thread_id=${thread_id}"
@@ -23,7 +23,10 @@ echo "ms=${ms}"
 user_id=$(grep '^user_id=' decoded.txt | cut -d'=' -f2)
 echo "user_id=${user_id}"
 
+## threadkey=""(空) と force_184="1" は、変わらないようなので
+## とりあえず、getthreadkeyの取得とパースは行わない
 # wget --save-cookies=cookie3.txt --keep-session-cookies -q -O - --load-cookies=cookie1.txt http://flapi.nicovideo.jp/api/getthreadkey?thread=${thread_id} > getthreadkey.html
+
 wget --post-data "<thread thread=\"${thread_id}\" version=\"20090904\" res_from=\"-1000\" scores=\"1\" nicoru=\"1\" threadkey=\"\" force_184=\"1\" user_id=\"${user_id}\" />" -q -O - --save-cookies=cookie1.txt --keep-session-cookies ${ms} > ms.html
 
 sed 's/<\/chat>/\n/g' ms.html | sed 's/<chat /\n/g' | sed 's/>/ /g' | sed '/^ *$/d' | tail -n +2 | head -n -1 > notag.txt
