@@ -26,9 +26,7 @@ echo "user_id=${user_id}"
 # wget --save-cookies=cookie3.txt --keep-session-cookies -q -O - --load-cookies=cookie1.txt http://flapi.nicovideo.jp/api/getthreadkey?thread=${thread_id} > getthreadkey.html
 wget --post-data "<thread thread=\"${thread_id}\" version=\"20090904\" res_from=\"-1000\" scores=\"1\" nicoru=\"1\" threadkey=\"\" force_184=\"1\" user_id=\"${user_id}\" />" -q -O - --save-cookies=cookie1.txt --keep-session-cookies ${ms} > ms.html
 
-# sed -e "s/<[^>]*>/\n/g" ms.html > notag.txt
 sed 's/<\/chat>/\n/g' ms.html | sed 's/<chat /\n/g' | sed 's/>/ /g' | sed '/^ *$/d' | tail -n +2 | head -n -1 > notag.txt
-# sed -e "s/<chat //g" notag.txt | sed 's/>/ /g' > notag2.txt
 
 awk 'BEGIN{FS=" ";OFS=","}{print $3,$NF}' notag.txt | cut -c7- | tr -d '"' | awk 'BEGIN{FS=","}{if($1 < 2000){print $2}}' > chihayanews.txt
 
