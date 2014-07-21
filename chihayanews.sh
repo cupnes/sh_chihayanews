@@ -39,7 +39,7 @@ main() {
 	## とりあえず、getthreadkeyの取得とパースは行わない
 	# wget --save-cookies=${cache_dir}/cookie3.txt --keep-session-cookies -q -O - --load-cookies=${cache_dir}/cookie1.txt http://flapi.nicovideo.jp/api/getthreadkey?thread=${thread_id} > ${cache_dir}/getthreadkey.html
 
-	wget --post-data "<thread thread=\"${thread_id}\" version=\"20090904\" res_from=\"-1000\" scores=\"1\" nicoru=\"1\" threadkey=\"\" force_184=\"1\" user_id=\"${user_id}\" />" -q -O - --save-cookies=${cache_dir}/cookie1.txt --keep-session-cookies ${ms} > ${cache_dir}/ms.html
+	wget --post-data "<thread thread=\"${thread_id}\" version=\"20090904\" res_from=\"-1000\" scores=\"1\" nicoru=\"1\" threadkey=\"\" force_184=\"1\" user_id=\"${user_id}\" />" -q -O - --load-cookies=${cache_dir}/cookie1.txt ${ms} > ${cache_dir}/ms.html
 
 	sed 's/<\/chat>/\n/g' ${cache_dir}/ms.html | sed 's/<chat /\n/g' | sed 's/>/ /g' | sed '/^ *$/d' | tail -n +2 | head -n -1 > ${cache_dir}/notag.txt
 
