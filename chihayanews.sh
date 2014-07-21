@@ -21,11 +21,8 @@ fi
 # wget --save-cookies=cookie2.txt --keep-session-cookies -q -O - --load-cookies=cookie1.txt http://flapi.nicovideo.jp/api/getflv/sm4538955 | tr = @ | tr % = | nkf -WwmQ | tr @ = | sed 's/&/\n/g' > decoded.txt
 
 thread_id=$(grep '^thread_id=' decoded.txt | cut -d'=' -f2)
-echo "thread_id=${thread_id}"
 ms=$(grep '^ms=' decoded.txt | cut -d'=' -f2)
-echo "ms=${ms}"
 user_id=$(grep '^user_id=' decoded.txt | cut -d'=' -f2)
-echo "user_id=${user_id}"
 
 ## threadkey=""(空) と force_184="1" は、変わらないようなので
 ## とりあえず、getthreadkeyの取得とパースは行わない
