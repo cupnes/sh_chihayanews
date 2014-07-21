@@ -9,11 +9,15 @@
 # http://nanoway.net/web/nicovideo-comment-api
 # http://dic.nicovideo.jp/a/ニコニコ動画api
 
-mail='ログインメールアドレス'
-pass='ログインパスワード'
+if [ -z "$SH_CHYNS_MAIL" ]; then
+	SH_CHYNS_MAIL=$(sed -n 1p ~/.chihayanews)
+fi
+if [ -z "$SH_CHYNS_PW" ]; then
+	SH_CHYNS_PW=$(sed -n 2p ~/.chihayanews)
+fi
 
 ## 初回は以下の2行を有効化して、decoded.txt を生成する
-# wget --post-data "mail=${mail}&password=${pass}" -q -O - --save-cookies=cookie1.txt --keep-session-cookies https://secure.nicovideo.jp/secure/login?site=niconico > /dev/null
+# wget --post-data "mail=${SH_CHYNS_MAIL}&password=${SH_CHYNS_PW}" -q -O - --save-cookies=cookie1.txt --keep-session-cookies https://secure.nicovideo.jp/secure/login?site=niconico > /dev/null
 # wget --save-cookies=cookie2.txt --keep-session-cookies -q -O - --load-cookies=cookie1.txt http://flapi.nicovideo.jp/api/getflv/sm4538955 | tr = @ | tr % = | nkf -WwmQ | tr @ = | sed 's/&/\n/g' > decoded.txt
 
 thread_id=$(grep '^thread_id=' decoded.txt | cut -d'=' -f2)
